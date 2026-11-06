@@ -2,47 +2,67 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Ритм → звук</title>
 <style>
-:root{color-scheme:dark;--bg:#101319;--panel:#191f29;--panel2:#202938;--text:#eef2f7;--muted:#9ca9b8;--line:#303b4b;--accent:#8bc5ff;--green:#91d6b0}
-*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% -20%,#243247 0%,var(--bg) 58%);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
-main{max-width:850px;margin:0 auto;padding:34px 20px 60px}h1{font-size:clamp(27px,5vw,40px);line-height:1.12;margin:0 0 8px;letter-spacing:-.04em} .sub{color:var(--muted);margin:0 0 26px}
+:root{color-scheme:dark;--bg:#101319;--panel:#191f29;--panel2:#202938;--text:#eef2f7;--muted:#9ca9b8;--line:#303b4b;--accent:#8bc5ff;--green:#91d6b0;--gold:#f0c674}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:radial-gradient(ellipse at 50% -20%,#243247 0%,var(--bg) 58%);background-color:var(--bg);color:var(--text);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+main{max-width:850px;margin:0 auto;padding:34px 20px 60px}
+h1{font-size:clamp(27px,5vw,40px);line-height:1.12;margin:0 0 8px;letter-spacing:-.04em}
+.sub{color:var(--muted);margin:0 0 26px}
 .panel{background:linear-gradient(145deg,var(--panel),#151b24);border:1px solid var(--line);border-radius:18px;padding:22px;margin:16px 0;box-shadow:0 12px 35px #0003}
-.row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}.between{justify-content:space-between}.field{display:flex;flex-direction:column;gap:7px;flex:1;min-width:180px}
-label,.label{font-size:13px;color:var(--muted);font-weight:650;letter-spacing:.02em}
+.row{display:flex;gap:14px;align-items:center;flex-wrap:wrap}.between{justify-content:space-between}
+.field{display:flex;flex-direction:column;gap:7px;flex:1;min-width:180px}
+label,.label{font-size:13px;color:var(--muted);font-weight:650;letter-spacing:.02em;text-transform:uppercase}
 select,button{font:inherit;color:var(--text);border:1px solid var(--line);border-radius:10px;background:var(--panel2);padding:11px 13px}
-select{width:100%}button{cursor:pointer;transition:.15s ease}button:hover{border-color:#6d8eae;transform:translateY(-1px)}button:active{transform:translateY(0)}button.primary{background:#d6eaff;color:#102033;border-color:#d6eaff;font-weight:750}.buttons{display:flex;gap:9px;flex-wrap:wrap}.buttons button{flex:1;min-width:90px}
+select{width:100%}
+button{cursor:pointer;transition:.15s ease}button:hover{border-color:#6d8eae;transform:translateY(-1px)}button:active{transform:translateY(0)}
+button.primary{background:#d6eaff;color:#102033;border-color:#d6eaff;font-weight:750}
+.buttons{display:flex;gap:9px;flex-wrap:wrap}.buttons button{flex:1;min-width:90px}
 .value{font-size:clamp(36px,8vw,58px);font-weight:750;letter-spacing:-.05em;font-variant-numeric:tabular-nums;line-height:1}
-.unit{font-size:16px;color:var(--muted);font-weight:550;letter-spacing:0}.range{width:100%;accent-color:var(--accent);margin:20px 0 8px;cursor:pointer}
-.scale{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}
+.unit{font-size:16px;color:var(--muted);font-weight:550;letter-spacing:0}
+.range{width:100%;accent-color:var(--accent);margin:20px 0 6px;cursor:pointer}
+.scale{position:relative;height:46px;margin:0 8px;font-size:12px;color:var(--muted)}
+.tick{position:absolute;top:0;transform:translateX(-50%);text-align:center;white-space:nowrap;line-height:1.3}
+.tick::before{content:"";display:block;width:1px;height:8px;background:var(--line);margin:0 auto 3px}
+.tick.first{transform:none;text-align:left}.tick.first::before{margin-left:0}
+.tick.last{transform:translateX(-100%);text-align:right}.tick.last::before{margin-right:0}
+.tick.key{color:var(--gold);font-weight:700}.tick.key::before{background:var(--gold);width:2px;height:12px}
+.zones{display:flex;justify-content:space-between;font-size:12px;margin:0 8px 4px}
+.zone-a{color:var(--muted)}.zone-b{color:var(--gold);font-weight:650}
 .note{font-size:14px;color:var(--muted);margin-top:9px}
-.status{display:flex;align-items:center;gap:9px;color:var(--muted);font-size:13px}.dot{width:9px;height:9px;border-radius:50%;background:#687789}.dot.on{background:var(--green);box-shadow:0 0 12px #91d6b080}
-.meter{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}.readout{background:#111720;border:1px solid var(--line);border-radius:12px;padding:14px}.readout strong{display:block;font-size:25px;font-variant-numeric:tabular-nums}.readout span{font-size:12px;color:var(--muted)}
-.pulse{height:12px;border-radius:99px;background:#111720;overflow:hidden;margin-top:18px;border:1px solid var(--line)}.pulse i{display:block;height:100%;width:0;background:linear-gradient(90deg,#6da9e4,#b5ddff);transition:width .08s linear}
-.small{font-size:12px;color:var(--muted)}.explain{color:#c4ceda;font-size:14px}.explain b{color:var(--text)}
-@media(max-width:560px){main{padding:24px 14px 42px}.panel{padding:17px}.meter{grid-template-columns:1fr 1fr}}
+.status{display:flex;align-items:center;gap:9px;color:var(--muted);font-size:13px}
+.dot{width:9px;height:9px;border-radius:50%;background:#687789}.dot.on{background:var(--green);box-shadow:0 0 12px #91d6b080}
+.meter{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.readout{background:#111720;border:1px solid var(--line);border-radius:12px;padding:14px}
+.readout strong{display:block;font-size:25px;font-variant-numeric:tabular-nums}.readout span{font-size:12px;color:var(--muted)}
+.pulse{height:12px;border-radius:99px;background:#111720;overflow:hidden;margin-top:18px;border:1px solid var(--line)}
+.pulse i{display:block;height:100%;width:0;background:linear-gradient(90deg,#6da9e4,#b5ddff)}
+.small{font-size:13px;color:var(--muted)}
+h2{font-size:18px;margin:0 0 4px;letter-spacing:-.02em}
+@media(max-width:560px){main{padding:24px 14px 42px}.panel{padding:17px}.tick{font-size:11px}}
 </style>
 </head>
 <body>
 <main>
   <h1>Ритм → звук</h1>
-  <p class="sub">Повторяйте одну и ту же ноту всё чаще и слушайте, как отдельные атаки сливаются в непрерывный звук.</p>
+  <p class="sub">Одна и та же нота, повторённая чаще и чаще, неизбежно превратится в другую ноту. Двигай шкалу и ощути это сам!</p>
 
   <section class="panel">
     <div class="row between">
-      <div><div class="label">Частота повторения</div><div class="value"><span id="rateOut">4.0</span><span class="unit"> раза/с · Гц</span></div></div>
+      <div><div class="label">Частота воспроизведения нот</div><div class="value"><span id="rateOut">4,0</span><span class="unit"> раз/с · Гц</span></div></div>
       <div class="status"><i class="dot" id="dot"></i><span id="status">Остановлено</span></div>
     </div>
-    <input class="range" id="rate" type="range" min="0" max="1000" step="1" value="300" aria-label="Частота повторения">
-    <div class="scale"><span>0,5 раза/с</span><span>4 раза/с</span><span>100 раз/с</span><span>2 000 раз/с</span>
-    </div>
-    <div class="note">Интервал между атаками: <b id="period">250 мс</b>. Слайдер логарифмический.</div>
+    <input class="range" id="rate" type="range" min="0" max="1000" step="1" value="300" aria-label="Частота воспроизведения нот">
+    <div class="scale" id="scale"></div>
+    <div class="zones"><span class="zone-a">◀ слышны отдельные ноты</span><span class="zone-b">рождается новая нота ▶</span></div>
+    <div class="note">Пауза между нотами: <b id="period">250 мс</b>. Шкала логарифмическая.</div>
   </section>
 
   <section class="panel">
     <div class="row">
-      <div class="field"><label for="note">ИСПОЛНЯЕМАЯ НОТА</label>
+      <div class="field"><label for="note">Исполняемая нота</label>
         <select id="note">
           <option value="130.813">C3</option><option value="164.814">E3</option><option value="196">G3</option>
           <option value="220">A3</option><option value="261.626">C4</option><option value="293.665">D4</option>
@@ -51,32 +71,31 @@ select{width:100%}button{cursor:pointer;transition:.15s ease}button:hover{border
           <option value="783.991">G5</option>
         </select>
       </div>
-      <div class="field"><label for="timbre">ТЕМБР</label>
+      <div class="field"><label for="timbre">Тембр</label>
         <select id="timbre"><option value="piano" selected>Синтезированное пианино</option><option value="sine">Синусоида</option></select>
       </div>
     </div>
     <div class="buttons" style="margin-top:17px">
-      <button class="primary" id="play">▶ Запустить</button><button id="stop">■ Стоп</button><button id="preview">Одна нота</button>
+      <button class="primary" id="play">▶ Запустить</button><button id="stop">■ Стоп</button>
     </div>
-    <div class="buttons" style="margin-top:10px">
-      <button class="ref" data-note="440">A4</button><button class="ref" data-note="523.251">C5</button><button class="ref" data-note="659.255">E5</button>
-    </div>
-    <p class="note">Кнопки A4 / C5 / E5 проигрывают одиночную ноту выбранного тембра. Они не меняют частоту повторения.</p>
   </section>
 
   <section class="panel">
-    <div class="label">АНАЛИЗ ВЫХОДНОГО АУДИО</div>
-    <div class="meter">
-      <div class="readout"><span>Обнаруженная высота тона</span><strong id="detected">—</strong><span id="detectedHz">Ожидание сигнала</span></div>
-      <div class="readout"><span>Заданная скорость атак</span><strong id="detectedRate">4,0 Гц</strong><span>Измеряется по расписанию повторов</span></div>
+    <h2>Эталонные звуки</h2>
+    <p class="note" style="margin:0 0 14px">Одиночная нота выбранного тембра — чтобы сравнить на слух, совпадает ли то, что вы слышите. Частоту повторения они не меняют.</p>
+    <div class="buttons">
+      <button class="ref" data-note="440">A4</button><button class="ref" data-note="523.251">C5</button><button class="ref" data-note="659.255">E5</button><button id="preview">Выбранная нота</button>
     </div>
-    <div class="pulse"><i id="pulseBar"></i></div>
-    <p class="small">Детектор анализирует звук после аудиовыхода. При низкой частоте повторения он может не показывать высоту между атаками — это нормально: в паузе сигнала нет.</p>
   </section>
 
-  <section class="panel explain">
-    <b>Что именно здесь повторяется?</b><br>
-    Каждая атака запускает полноценный короткий тон с собственной огибающей, а не один цикл волны. При 4 Гц вы слышите четыре ноты в секунду. При увеличении скорости атаки сближаются. На высоких частотах повторяющийся короткий звуковой фрагмент начинает восприниматься как тон, высота которого определяется частотой повторения.
+  <section class="panel">
+    <div class="label">Тюнер</div>
+    <div class="meter">
+      <div class="readout"><span>Нота, которую мы слышим</span><strong id="detected">—</strong><span id="detectedHz">Ожидание сигнала</span></div>
+      <div class="readout"><span>Частота повторений</span><strong id="detectedRate">4,0 Гц</strong></div>
+    </div>
+    <div class="pulse"><i id="pulseBar"></i></div>
+    <p class="small" style="margin-top:14px">Тюнер показывает реальный воспроизводимый звук. При очень низкой частоте повторений он может давать сбои — он здесь для ориентира и для упрощения понимания. Пользуйтесь эталонными звуками выше, чтобы точно убедиться, что нота совпадает.</p>
   </section>
 </main>
 <script>
@@ -86,15 +105,24 @@ select{width:100%}button{cursor:pointer;transition:.15s ease}button:hover{border
   let ctx=null, master=null, analyser=null, worklet=null, playing=false;
   const minRate=.5, maxRate=2000;
   const rateFromSlider=v => minRate*Math.pow(maxRate/minRate, Number(v)/1000);
-  const sliderFromRate=r => Math.round(1000*Math.log(r/minRate)/Math.log(maxRate/minRate));
   let rate=4;
   function fmt(n,d=1){return n.toFixed(d).replace('.',',')}
+
+  // Scale labels placed at their true logarithmic positions
+  const ticks=[[.5,'0,5'],[4,'4'],[20,'20'],[100,'100 Гц',1],[500,'500'],[2000,'2 000 раз/с']];
+  $('scale').innerHTML=ticks.map(([v,t,key],i)=>{
+    const p=100*Math.log(v/minRate)/Math.log(maxRate/minRate);
+    const cls='tick'+(key?' key':'')+(i===0?' first':'')+(i===ticks.length-1?' last':'');
+    return `<div class="${cls}" style="left:${p}%">${t}</div>`;
+  }).join('');
+
+  function settings(r){return {type:'settings', rate:r, noteHz:noteHz(), timbre:$('timbre').value}}
   function updateRate(){
     rate=rateFromSlider(rateSlider.value);
     rateOut.textContent=fmt(rate);
     periodOut.textContent=fmt(1000/rate, rate>=100 ? 2 : 0)+' мс';
     $('detectedRate').textContent=fmt(rate)+' Гц';
-    if(worklet) worklet.port.postMessage({type:'settings', rate, noteHz:noteHz(), timbre:$('timbre').value});
+    if(worklet && playing) worklet.port.postMessage(settings(rate));
   }
   rateSlider.addEventListener('input',updateRate); updateRate();
   function noteHz(){return Number($('note').value)}
@@ -161,58 +189,59 @@ select{width:100%}button{cursor:pointer;transition:.15s ease}button:hover{border
     URL.revokeObjectURL(url);
     worklet=new AudioWorkletNode(ctx,'note-repeater');
     worklet.connect(master);
-    worklet.port.postMessage({type:'settings',rate,noteHz:noteHz(),timbre:$('timbre').value});
+    worklet.port.postMessage(settings(0));
   }
   async function start(){
     await ensureAudio();
     if(playing) return;
     playing=true;
-    worklet.port.postMessage({type:'settings',rate,noteHz:noteHz(),timbre:$('timbre').value});
+    worklet.port.postMessage(settings(rate));
     $('dot').classList.add('on'); $('status').textContent='Воспроизведение';
     $('play').textContent='▶ Играет';
   }
   function stop(){
     playing=false;
-    if(worklet) worklet.port.postMessage({type:'settings',rate:0,noteHz:noteHz(),timbre:$('timbre').value});
+    if(worklet) worklet.port.postMessage(settings(0));
     $('dot').classList.remove('on'); $('status').textContent='Остановлено';
     $('play').textContent='▶ Запустить';
   }
   $('play').addEventListener('click',start);
   $('stop').addEventListener('click',stop);
 
-  // Short standalone reference tones; the repeated signal itself is rendered in the AudioWorklet.
+  // Standalone reference tones
   function playOne(hz=noteHz()){
     if(!ctx) return;
-    const start=ctx.currentTime+.02, duration=.42;
+    const t0=ctx.currentTime+.02, duration=.42;
     const voice=ctx.createGain();
-    voice.gain.setValueAtTime(.0001,start);
-    voice.gain.linearRampToValueAtTime(.65,start+.008);
-    voice.gain.exponentialRampToValueAtTime(.0001,start+duration);
+    voice.gain.setValueAtTime(.0001,t0);
+    voice.gain.linearRampToValueAtTime(.65,t0+.008);
+    voice.gain.exponentialRampToValueAtTime(.0001,t0+duration);
     voice.connect(master);
     const partials=$('timbre').value==='sine'?[1]:[1,.52,.24,.13,.07,.035];
     partials.forEach((amp,i)=>{
       const osc=ctx.createOscillator(), g=ctx.createGain();
       osc.type='sine'; osc.frequency.value=hz*(i+1);
       g.gain.value=amp; osc.connect(g); g.connect(voice);
-      osc.start(start); osc.stop(start+duration+.02);
+      osc.start(t0); osc.stop(t0+duration+.02);
     });
   }
   $('preview').addEventListener('click',async()=>{await ensureAudio();playOne()});
   document.querySelectorAll('.ref').forEach(b=>b.addEventListener('click',async()=>{
     await ensureAudio();playOne(Number(b.dataset.note));
   }));
-  $('note').addEventListener('change',()=>{if(worklet) worklet.port.postMessage({type:'settings',rate,noteHz:noteHz(),timbre:$('timbre').value})});
-  $('timbre').addEventListener('change',()=>{if(worklet) worklet.port.postMessage({type:'settings',rate,noteHz:noteHz(),timbre:$('timbre').value})});
-  // Autocorrelation of the actual analyser output. Decimated buffer keeps the work bounded.
+  const resend=()=>{if(worklet && playing) worklet.port.postMessage(settings(rate))};
+  $('note').addEventListener('change',resend);
+  $('timbre').addEventListener('change',resend);
+
+  // Autocorrelation of the actual analyser output
   const buf=new Float32Array(8192);
   function detectPitch(){
     if(!analyser || !ctx) return;
     analyser.getFloatTimeDomainData(buf);
-    const stride=1, x=[];
-    for(let i=0;i<buf.length;i+=stride)x.push(buf[i]);
-    let rms=0; for(const v of x)rms+=v*v; rms=Math.sqrt(rms/x.length);
+    const x=buf;
+    let rms=0; for(let i=0;i<x.length;i++)rms+=x[i]*x[i]; rms=Math.sqrt(rms/x.length);
     if(rms<.008){$('detected').textContent='—';$('detectedHz').textContent='Нет активного сигнала';return}
-    const sr=ctx.sampleRate/stride, minLag=Math.floor(sr/2400), maxLag=Math.min(Math.floor(sr/70),x.length/2);
+    const sr=ctx.sampleRate, minLag=Math.floor(sr/2400), maxLag=Math.min(Math.floor(sr/70),x.length/2);
     let bestLag=-1,best=-1;
     for(let lag=minLag;lag<=maxLag;lag++){
       let corr=0,n=0;
@@ -224,18 +253,16 @@ select{width:100%}button{cursor:pointer;transition:.15s ease}button:hover{border
     const hz=sr/bestLag;
     const midi=Math.round(69+12*Math.log2(hz/440));
     const names=['C','C♯','D','D♯','E','F','F♯','G','G♯','A','A♯','B'];
-    const name=names[(midi%12+12)%12]+(Math.floor(midi/12)-1);
-    $('detected').textContent=name;
-    $('detectedHz').textContent=fmt(hz,1)+' Гц · по аудиосигналу';
+    $('detected').textContent=names[(midi%12+12)%12]+(Math.floor(midi/12)-1);
+    $('detectedHz').textContent=fmt(hz,1)+' Гц';
   }
   setInterval(()=>{
     detectPitch();
     if(playing && ctx){
-      const elapsed=ctx.currentTime-(lastPulse||ctx.currentTime);
-      const p=Math.max(0,Math.min(1,1-elapsed/(1/rate)));
+      const p=1-((ctx.currentTime*rate)%1);
       $('pulseBar').style.width=(p*100)+'%';
     } else $('pulseBar').style.width='0%';
-  },180);
+  },60);
   window.addEventListener('pagehide',stop);
 })();
 </script>
